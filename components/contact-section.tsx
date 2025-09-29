@@ -127,6 +127,28 @@ export function ContactSection() {
     }
   }
 
+  const handleCurrentChannelsChange = (value: string, checked: boolean) => {
+    setFormData((prev) => {
+      let updated: string[] = [];
+
+      if (value === "Keine") {
+        // "Keine" ausgewählt → alle anderen abwählen
+        updated = checked ? ["Keine"] : [];
+      } else {
+        // andere Plattform ausgewählt → "Keine" abwählen
+        const filtered = (prev.currentChannels || []).filter((item) => item !== "Keine");
+        updated = checked ? [...filtered, value] : filtered.filter((item) => item !== value);
+      }
+
+      return { ...prev, currentChannels: updated };
+    });
+
+    if (errors.length > 0) {
+      setErrors([]);
+    }
+  };
+
+
   const handleArrayChange = (field: string, value: string, checked: boolean) => {
     setFormData((prev) => ({
       ...prev,
@@ -386,13 +408,16 @@ export function ContactSection() {
                       <Checkbox
                         id={`current-${channel}`}
                         checked={formData.currentChannels.includes(channel)}
-                        onCheckedChange={(checked) => handleArrayChange("currentChannels", channel, checked as boolean)}
+                        onCheckedChange={(checked) =>
+                          handleCurrentChannelsChange(channel, checked as boolean)
+                        }
                       />
                       <Label htmlFor={`current-${channel}`} className="text-sm">
                         {channel}
                       </Label>
                     </div>
                   ))}
+
                 </div>
               </div>
               <div className="space-y-3">
