@@ -104,7 +104,6 @@ export function HeroSection() {
           </div>
         </div>
       </div>
-      <p>Test 2</p>
     </section>
   )
 }
