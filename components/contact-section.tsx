@@ -687,9 +687,9 @@ export function ContactSection() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-md mx-auto">
             <Button
               className="bg-accent hover:bg-background hover:text-accent hover:border-accent border-2 border-accent text-accent-foreground transition-all duration-300 shadow-lg hover:shadow-xl w-full sm:w-auto"
-              onClick={() => setShowForm(true)}
+              onClick={() => setShowForm((prev) => !prev)}
             >
-              Beratungsformular öffnen
+              {showForm ? "Beratungsformular schließen" : "Beratungsformular öffnen"}
             </Button>
             <Button
               variant="outline"
