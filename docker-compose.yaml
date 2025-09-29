@@ -1,0 +1,24 @@
+version: "3"
+services:
+  nextjs-app:
+    image: ghcr.io/<github-username>/<repo-name>:latest
+    container_name: nextjs-app
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --interval 60 nextjs-app
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_ROLLING_RESTART=true
+      - WATCHTOWER_NOTIFICATIONS=email
+      # Falls GHCR private ist:
+      - REGISTRY_AUTH_FILE=/config/config.json

@@ -1,23 +1,24 @@
-# Plattform explizit auf amd64 (kompatibel mit NAS und Apple Silicon)
-FROM --platform=linux/amd64 node:20-bullseye
-
-# Arbeitsverzeichnis im Container
+# 1. Build Stage
+FROM node:20-alpine AS builder
 WORKDIR /app
-
-# Nur package.json und package-lock.json kopieren
 COPY package*.json ./
-
-# Saubere Installation der Dependencies
-RUN npm ci
-
-# Rest des Projekts kopieren
+RUN npm install --frozen-lockfile
 COPY . .
-
-# Next.js Build
 RUN npm run build
 
-# Port freigeben (Standard: 3000)
-EXPOSE 3000
+# 2. Run Stage
+FROM node:20-alpine AS runner
+WORKDIR /app
 
-# Startbefehl
+ENV NODE_ENV=production
+
+COPY --from=builder /app/package*.json ./
+RUN npm install --omit=dev --ignore-scripts
+
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+
+EXPOSE 3000
 CMD ["npm", "start"]
+
+# 1. Build Stage FROM node:20-alpine AS builder WORKDIR /app COPY package*.json ./ RUN npm install --frozen-lockfile COPY . . RUN npm run build # 2. Run Stage FROM node:20-alpine AS runner WORKDIR /app ENV NODE_ENV=production COPY --from=builder /app/package*.json ./ RUN npm install --omit=dev --ignore-scripts COPY --from=builder /app/.next ./.next COPY --from=builder /app/public ./public EXPOSE 3000 CMD ["npm", "start"]
