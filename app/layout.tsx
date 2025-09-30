@@ -1,12 +1,12 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { DM_Sans } from "next/font/google"
+import { Inter } from "next/font/google"
 import { Suspense } from "react"
 import "./globals.css"
 
-const dmSans = DM_Sans({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-dm-sans",
+  variable: "--font-inter",
   display: "swap",
 })
 
@@ -31,7 +31,7 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
-      <body className={`relative font-sans ${dmSans.variable}`}>
+      <body className={`relative font-sans tracking-tighter ${inter.variable}`}>
         <Suspense fallback={null}>{children}</Suspense>
       </body>
     </html>
